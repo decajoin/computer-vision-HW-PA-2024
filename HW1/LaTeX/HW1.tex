@@ -1,0 +1,183 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{quicklatex}
+\usepackage{titlesec}
+\usepackage{fancyhdr}  
+\usepackage{enumitem}
+
+
+% 设置页面样式
+\pagestyle{fancy}
+\fancyhf{}  % 清除所有页眉页脚
+\fancyfoot[C]{\thepage}  % 在页脚中间显示页码
+\renewcommand{\headrulewidth}{0pt}  % 去除页眉横线
+
+
+% 设置 section 标题左对齐
+\titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{}
+
+\begin{document}
+
+
+	\begin{titlepage}
+		\centering
+		\vspace*{2cm}
+		\includegraphics[width=0.5\textwidth]{./image/name.png}\\[1cm] % 插入图片
+		{\Huge \textbf{计算机视觉与图形图像处理 HW1}}\\[2cm]
+		\includegraphics[width=0.2\textwidth]{./image/NJAU.eps}\\[2cm] % 插入图片
+		% 作业封皮
+	    \begin{tabular}{ll} % r: 右对齐, l: 左对齐
+			{\Large 指导老师：} & {\Large 黄君贤} \\[0.5cm]
+			{\Large 学年：} & {\Large 2024-2025} \\[0.5cm]
+			{\Large 学期：} & {\Large 第一学期} \\[0.5cm]
+			{\Large 姓名：} & {\Large 杨义琦} \\[0.5cm]
+			{\Large 学号：} & {\Large 11522216} \\[0.5cm]
+			{\Large 院系：} & {\Large 人工智能学院} \\[0.5cm]
+			{\Large 完成日期：} & {\Large \today} \\ 
+		\end{tabular}
+		\vfill
+	\end{titlepage}
+	
+	
+	\section{题目1}
+	\textbf{题目描述：}
+	
+	The continuous convolution of two functions $f(x)$ and $g(x)$ is given by
+	\begin{align}
+		\left(f*g\right)\left(x\right)=\int_{-\infty}^{+\infty}f\left(y\right)g\left(x-y\right) \mathrm{d}y.
+	\end{align}
+	The Gaussian function at scale $s$ is defined as
+	\begin{align}
+		G_s\left(x\right)=\frac{1}{\sqrt{2\pi s}}\exp\left(-\frac{x^2}{2s}\right),
+	\end{align}
+	and has the property that
+	\begin{align}
+		\int_{-\infty}^{+\infty}G_s\left(x\right) \mathrm{d}x=1.
+	\end{align}
+	Prove that this class of functions satisfies the \textit{semigroup property}: the convolution of one
+	Gaussian with another produces a third Gaussian with scale equal to their sum, or
+	\begin{align}
+		\left(G_{s_1}*G_{s_2}\right)\left(x\right)=G_{s_1+s_2}\left(x\right).
+	\end{align}
+	
+	
+	\textbf{题解：}
+	
+	首先，代入高斯函数的定义：
+	\begin{align*}
+		G_{s_1}(y)&=\frac1{\sqrt{2\pi s_1}}\exp\left(-\frac{y^2}{2s_1}\right),\\G_{s_2}(x-y)&=\frac1{\sqrt{2\pi s_2}}\exp\left(-\frac{(x-y)^2}{2s_2}\right).
+	\end{align*}
+	现在，计算卷积$(G_{s_1}*G_{s_2})(x)$：
+	\begin{align*}
+		(G_{s_1}*G_{s_2})(x)=\int_{-\infty}^{+\infty}G_{s_1}(y)G_{s_2}(x-y)\mathrm{d}y.
+	\end{align*}
+	代入高斯函数的表达式：
+	\begin{align*}
+		(G_{s_1}*G_{s_2})(x) = \int_{-\infty}^{+\infty} \frac {1}{\sqrt {2\pi s_1}}\exp (-\frac {y^2}{2s_1}) \cdot \frac {1}{\sqrt {2\pi s_2}}\exp (-\frac {(x-y)^2}{2s_2}) dy \
+	\end{align*}
+	整理可得：
+	\begin{align*}
+		\frac {1}{\sqrt {2\pi s_1}\sqrt {2\pi s_2}}\int_{-\infty}^{+\infty} \exp (-(\frac {s_2+s_1}{2s_1s_2}) y^2 + \frac {x}{s_2} y - \frac {x^2}{2s_2}) dy.
+	\end{align*}
+	设$A=\frac{s_1+s_2}{2s_1s_2}$, $B=\frac{x}{s_2}$，因此，积分可以表示为：
+	\begin{align*}
+			\frac {1}{\sqrt {2\pi s_1}\sqrt {2\pi s_2}}\int_{-\infty}^{+\infty} \exp \left( -Ay^2 + By - \frac{x^2}{2s_2} \right) \, dy.
+	\end{align*}
+	我们可以将常数项从积分中提取出来：
+	\begin{align*}
+		=\frac {1}{\sqrt {2\pi s_1}\sqrt {2\pi s_2}}\exp\left(-\frac{x^2}{2s_2}\right)\int_{-\infty}^{+\infty} \exp\left(-Ay^2 + By\right) \, dy.
+	\end{align*}
+	对积分项进行变换可得：
+	\begin{align*}
+		=\frac {1}{\sqrt {2\pi s_1}\sqrt {2\pi s_2}}\exp\left(-\frac{x^2}{2s_2}\right)\int_{-\infty}^{+\infty} \exp\left(A\left(y - \frac{B}{2A}\right)^2 - \frac{B^2}{4A}\right) \, dy.
+	\end{align*}
+	由高斯函数的性质和高斯函数积分的标准结果可知：
+	\begin{align*}
+		\int_{-\infty}^{+\infty} \exp \left( - a(y - b)^2 \right) \, dy = \sqrt{\frac{\pi}{a}}.
+	\end{align*}
+	所以我们的积分结果为：
+	\begin{align*}
+		= \frac{1}{\sqrt{2\pi s_1} \sqrt{2\pi s_2}} \cdot \exp \left( -\frac{x^2}{2s_2} \right) \cdot \exp \left( \frac{B^2}{4A} \right) \sqrt{\frac{\pi}{A}}.
+	\end{align*}
+	将$A$和$B$代入可得：
+	\begin{align*}
+		= \frac{1}{\sqrt{2\pi(s_1+s_2)}}\exp(-\frac{x^2}{2(s_1+s_2)}) = G_{s_1 + s_2}(x).
+	\end{align*}
+	所以：
+	\begin{align*}
+		\left( G_{s_1} * G_{s_2} \right)(x) = G_{s_1 + s_2}(x).
+	\end{align*}
+	这表明两个高斯函数的卷积仍然是一个高斯函数，其尺度为$s_1+s_2$，从而证明了高斯函数满足半群性质。
+	
+	\section{题目2}
+	\textbf{题目描述：}
+	
+	In class we derived a finite-difference approximation to the derivative of the univariate function $f(x)$ by considering the Taylor polynomial approximations of $f(x + h)$ and $f(x - h)$.
+	We showed that
+	\begin{align*}
+		f'(x)=\frac{f(x+h)-f(x-h)}{2h}+O(h^2),
+	\end{align*}
+	so that the derivative can be approximated by convolving a discrete version of $f(x)$—a vector
+	of values (..., $f(x_0-\Delta)$, $f(x_0)$, $f(x_0+\Delta)$,...)—with kernel ($\frac{1}{2}$, 0, -$\frac{1}{2}$). This is termed a because \textit{central difference} because its interval is symmetric about a sample point.
+	\begin{enumerate}
+		\item Derive a higher order central-difference approximation to $f'(x)$ such that the truncation
+		error tends to zero as $h^4$ instead of $h^2$. Hint: consider Taylor polynomial approximations of $f(x \pm 2h)$ in addition to $f(x \pm h)$.
+		\item What is the corresponding convolution (not correlation!) kernel?
+	\end{enumerate}
+	
+	
+	
+	\textbf{题解：}
+	
+	要推导一个更高阶的中心差分近似以计算$f'(x)$，我们可以考虑$f(x \pm h)$和$f(x \pm 2h)$的泰勒展开。\\
+	对于$f(x + h)$和$f(x - h)$我们有：
+	\begin{align*}
+		f(x+h) &= f(x) + hf'(x) + \frac{h^2}{2} f''(x) + \frac{h^3}{6} f'''(x) + \frac{h^4}{24} f^{(4)}(x) + O(h^5), \\
+		f(x-h) &= f(x) - hf'(x) + \frac{h^2}{2} f''(x) - \frac{h^3}{6} f'''(x) + \frac{h^4}{24} f^{(4)}(x) + O(h^5).
+	\end{align*}
+	将这两个展开结合，得到：
+	\begin{align*}
+		f(x+h) - f(x-h) = 2h f'(x) + \frac{h^3}{3} f'''(x) + O(h^5).
+	\end{align*}
+	对于$f(x + 2h)$和$f(x - 2h)$我们有：
+	\begin{align*}
+		f(x + 2h) &= f(x) + 2h f'(x) + 2h^2 f''(x) + \frac{8h^3}{6} f'''(x) + \frac{16h^4}{24} f^{(4)}(x) + O(h^5), \\
+		f(x - 2h) &= f(x) - 2h f'(x) + 2h^2 f''(x) - \frac{8h^3}{6} f'''(x) + \frac{16h^4}{24} f^{(4)}(x) + O(h^5).
+	\end{align*}	
+	将这两个展开结合，得到：
+	\begin{align*}
+		f(x + 2h) - f(x - 2h) = 4hf'(x) + \frac{8h^3}{3}f'''(x) + O(h^5).
+	\end{align*}
+	设要找的公式形式为：
+	\begin{align*}
+		f'(x) = \frac {a [f (x+h)-f (x-h)] + b [f (x+2h)-f (x-2h)]}{2h} + O (h^4)
+	\end{align*}
+	将泰勒展开式代入，整理得：
+	\begin{align*}
+		f'(x)(a+2b) + \frac{h^2}{6}f'''(x)(a+8b) + O(h^4) = f'(x)
+	\end{align*}
+	要使误差为 $O (h^4)$, 需要：
+	\begin{align*}
+		a+2b&=1 (f'(x)\text{项系数})\\
+		a+8b&=0 (f'''(x)\text{项系数})
+	\end{align*}
+	解这个方程组得：$a=\frac{4}{3},b=-\frac{1}{6}$.\\
+	所以我们可以得到：
+	\begin{enumerate}
+		\item  	四阶精度的中心差分公式为：
+		\begin{align*}
+			f'(x) &= \frac{4[f(x+h)-f(x-h)] - [f(x+2h)-f(x-2h)]}{6h} + O(h^4)\\
+			&=\frac{f(x-2h) - 4f(x-h) + 0f(x) + 4f(x+h) - f(x+2h)}{6h} + O(h^4)
+		\end{align*}
+		\item 	相应的卷积核为：
+		\begin{align*}
+			(\frac {1}{6}, -\frac {2}{3}, 0, \frac {2}{3}, -\frac {1}{6})
+		\end{align*}
+	\end{enumerate}
+
+
+	
+
+	
+	
+\end{document}
